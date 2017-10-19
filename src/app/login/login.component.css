@@ -1,0 +1,17 @@
+/*styles for home content only*/
+.fullscreenbackground{
+  background: url(https://image.freepik.com/free-vector/payment-background-design_1212-511.jpg) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  height: 100%;
+}
+.panelcontainer{
+/*background-color: transparent;*/
+width:50%;
+  margin: 20%;
+  position: relative;
+  float: left;
+  left: 30%;
+}

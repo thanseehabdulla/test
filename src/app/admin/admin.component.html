@@ -1,0 +1,370 @@
+<!--///////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+<!--container body-->
+<div class="container" style="width:100%">
+  <div class="row">
+
+
+    <!--container nav pills -->
+    <div class="col-xs-2" style="margin-top: 3%">
+      <ul class="nav nav-pills nav-stacked">
+        <li class="active"><a (click)="home()">Billing App</a></li>
+        <li><a (click)="home()">Home</a></li>
+        <li *ngIf="admin"><a (click)="addUserData()">Add User</a></li>
+        <li *ngIf="!admin"><a (click)="addBillData()">Add Bill</a></li>
+        <li *ngIf="!admin"><a (click)="addItemData()">Add Item</a></li>
+
+        <li><a (click)="logOut()">Logout</a></li>
+      </ul>
+    </div>
+
+    <!--container content-->
+    <div class="col-xs-10" style="margin-top: 3%">
+      <ul class="breadcrumb">
+        <li class="active">{{homedata}}</li>
+      </ul>
+
+      <div id="userdatatable">
+        <h1 *ngIf="admin" id="tables">User Data <a (click)="addUserData()" class="btn btn-primary"
+                                                   style="float: right;">+</a></h1>
+
+
+        <!--main table-->
+        <div *ngIf="admin" class="bs-component">
+          <table class="table table-striped table-hover table-condensed table-bordered " id="example">
+            <thead>
+            <tr class="info">
+              <th>#</th>
+              <th>Name</th>
+              <th>Password</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="active" *ngFor="let data of userArrayList;let i = index">
+              <td>{{data.id}}</td>
+              <td>{{data.name}}</td>
+              <td>{{data.password}}</td>
+              <td>{{data.email}}</td>
+              <td>{{data.phone}}</td>
+              <td><a id='edit' (click)="edit(data.id)" class="btn btn-success"
+                     style="float: left;">Edit</a> <a (click)="remove(data.id)"
+                                                      class="btn btn-danger"
+                                                      style="float: left;margin-left: 10px">X</a>
+              </td>
+            </tr>
+
+            </tbody>
+          </table>
+
+        </div>
+
+        <div *ngIf="!admin" class="bs-component">
+          <table class="table table-striped table-hover table-condensed table-bordered " id="example">
+            <thead>
+            <tr class="info">
+              <th>#</th>
+              <th>Bill No</th>
+              <th>Customer Id</th>
+              <th>Date</th>
+              <th>Amount</th>
+              <th>Column</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="active" *ngFor="let data of billArrayList;let i = index">
+              <td>{{data.id}}</td>
+              <td>{{data.billno}}</td>
+              <td>{{data.userid}}</td>
+              <td>{{data.created_at}}</td>
+              <td>{{data.totalwithtax}}</td>
+              <td><a id='print' (click)="print(data.id)" class="btn btn-success"
+                     style="float: left;">Print</a>
+
+
+              </td>
+            </tr>
+
+            </tbody>
+          </table>
+
+        </div>
+
+      </div>
+
+
+      <!--add customer form-->
+      <div id="adduserdata" style="display: none" class="adduseralignment">
+        <div class="well bs-component">
+          <form class="form-horizontal">
+            <fieldset>
+              <legend>User Detail</legend>
+
+
+              <div class="form-group">
+                <label for="inputEmail" class="col-lg-2 control-label">Name</label>
+                <div class="col-lg-10">
+                  <input type="text" class="form-control" name='name' id="name"
+                         placeholder="Name" [(ngModel)]="username" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="inputEmail" class="col-lg-2 control-label">Email</label>
+                <div class="col-lg-10">
+                  <input type="email" class="form-control" name='email' id="email"
+                         placeholder="email" [(ngModel)]="email" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="inputEmail" class="col-lg-2 control-label">Phone</label>
+                <div class="col-lg-10">
+                  <input type="number" class="form-control" name='phone' id="phone"
+                         placeholder="phone" [(ngModel)]="phone" required>
+                </div>
+              </div>
+
+
+              <div class="form-group">
+                <label for="inputPassword" class="col-lg-2 control-label">Password</label>
+                <div class="col-lg-10">
+                  <input type="password" class="form-control" name='password'
+                         id="inputPassword" placeholder="Password" [(ngModel)]="password"
+                         required>
+
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="inputPassword" class="col-lg-2 control-label">Confirm
+                  Password</label>
+                <div class="col-lg-10">
+                  <input type="password" class="form-control" name='cpassword'
+                         id="inputPassword2" placeholder="Password" [(ngModel)]="cpassword"
+                         required>
+                  <p id="validate-status"></p>
+                </div>
+
+              </div>
+
+
+              <div class="form-group">
+                <div class="col-lg-10 col-lg-offset-2">
+                  <button type="reset" class="btn btn-default" (click)="home();">Cancel
+                  </button>
+                  <button *ngIf="!edits" type="submit" class="btn btn-primary" (click)="submitUserForm()">
+                    Submit
+                  </button>
+                  <button *ngIf="edits" type="submit" class="btn btn-primary" (click)="updateUserData()">
+                    Submit
+                  </button>
+                </div>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+
+      <!--add item form-->
+      <div id="additemdata" style="display: none" class="adduseralignment">
+        <p>We are working on it</p>
+      </div>
+
+      <!--add bill form-->
+      <div id="addbilldata" style="display: none" class="adduseralignment">
+        <div class="well bs-component">
+          <form class="form-horizontal">
+            <fieldset>
+              <legend>Add bill</legend>
+
+              <table width="100%">
+                <tr>
+                  <th><label for="inputEmail" class="col-lg-5 ">Bill No*</label></th>
+                  <th><label for="inputEmail" class="col-lg-5 ">Party Name*</label></th>
+                  <th><label for="inputEmail" class="col-lg-5 ">Site Name</label>
+                  </th>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="form-group" style="float:left;margin-right:20px;">
+
+                      <div class="col-lg-10">
+                        <input type="text" class="form-control" name='name' id="billno"
+                               placeholder="enter text" [(ngModel)]="billno" required>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="form-group" style="float:left;margin-right:20px;">
+
+                      <div class="col-lg-10">
+                        <input type="text" class="form-control" name='email' id="partyname"
+                               placeholder="Enter Text" [(ngModel)]="partyname" required>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="form-group" style="float:left;">
+                      <div class="col-lg-10">
+                        <input type="text" class="form-control" name='phone' id="sitename"
+                               placeholder="sitename" [(ngModel)]="sitename" required>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+              <table width="76%">
+                <tr>
+                  <th><label for="inputEmail" class="col-lg-2">GSTN</label>
+                  </th>
+                  <th><label for="inputEmail" class="col-lg-5">Address* </label></th>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="form-group" style="float:left;">
+                      <div class="col-lg-10">
+                        <input type="text" class="form-control" name='phone' id="gstn"
+                               placeholder="gstn" [(ngModel)]="gstn" required>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="form-group" style="float:left;margin-right:20px;">
+
+                      <div class="col-lg-9">
+                        <input type="text" class="form-control" name='email' id="address"
+                               placeholder="Enter Text" [(ngModel)]="address" required>
+                      </div>
+                    </div>
+                  </td>
+
+                </tr>
+
+              </table>
+
+
+              <br>
+              <div class="jumbotron">
+                <table>
+                  <tr>
+                    <th>Id</th>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Rate</th>
+                    <th>Total</th>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="form-group" style="float:left;margin-right:20px;">
+                        <!--<label for="inputEmail"  class="col-lg-2 control-label">ID*</label>-->
+                        <div class="col-lg-10">
+                          <input type="text" class="form-control" name='name' id="id"
+                                 placeholder="id" [(ngModel)]="id" required>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group" style="float:left;margin-right:20px;">
+                        <!--<label for="inputEmail" class="col-lg-2 control-label">Item*</label>-->
+                        <div class="col-lg-10">
+                          <input type="text" class="form-control" name='email' id="Item"
+                                 placeholder="Enter Text" [(ngModel)]="Item" required>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group" style="float:left;">
+                        <!--<label for="inputEmail" class="col-lg-2 control-label">Quantity*</label>-->
+                        <div class="col-lg-10">
+                          <input type="text" class="form-control" name='phone' id="quantity"
+                                 placeholder="Enter Text" [(ngModel)]="quantity" required>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group" style="float:left; height: 100%">
+                        <!--<label for="inputEmail" class="col-lg-2 control-label">rate* </label>-->
+                        <div class="col-lg-9">
+                          <input type="text" class="form-control" name='email' id="rate"
+                                 placeholder="Enter Text" [(ngModel)]="rate" required>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group" style="float:left;">
+                        <!--<label for="inputEmail" class="col-lg-2 control-label">Total</label>-->
+                        <div class="col-lg-10">
+                          <input type="text" class="form-control" name='phone' id="total"
+                                 placeholder="total" [(ngModel)]="total" required>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="3"></td>
+                    <td><label for="inputEmail" class="col-lg-10 control-label">9%SGST</label></td>
+                    <td>
+                      <div class="form-group" style="float:left;">
+
+                        <div class="col-lg-10">
+                          <input type="text" class="form-control" name='phone' id="sgst"
+                                 placeholder="sgst" [(ngModel)]="sgst" required>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="3"></td>
+                    <td><label for="inputEmail" class="col-lg-10 control-label">9%CGST</label>
+                    </td>
+                    <td>
+                      <div class="form-group" style="float:left;">
+                        <div class="col-lg-10">
+                          <input type="text" class="form-control" name='phone' id="cgst"
+                                 placeholder="cgst" [(ngModel)]="cgst" required>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="3"></td>
+                    <td><label for="inputEmail" class="col-lg-10 control-label">Total with tax</label>
+                    </td>
+                    <td>
+                      <div class="form-group" style="float:left;">
+                        <div class="col-lg-10">
+                          <input type="text" class="form-control" name='phone' id="totalwithtax"
+                                 placeholder="totalwithtax" [(ngModel)]="totalwithtax" required>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+
+
+                <div class="form-group">
+                  <div class="col-lg-10 col-lg-offset-2">
+                    <button type="reset" class="btn btn-default" (click)="home();">Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary" (click)="submitBillForm()">
+                      Save
+                    </button>
+
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+
+
+      <!--            /////////////////////////////column end here////////////////////////////////////////-->
+    </div>
+
+
+    <!--////////////////////////////////////container end////////////////////////////////////////////////////////////////////////-->
+  </div>
+</div>
